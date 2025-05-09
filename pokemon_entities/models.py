@@ -1,10 +1,16 @@
 from django.db import models
 
+
 class Pokemon(models.Model):
     title = models.CharField('Название', max_length=200)
     title_en = models.CharField('Название (англ.)', max_length=200, blank=True)
     title_jp = models.CharField('Название (яп.)', max_length=200, blank=True)
-    image = models.ImageField('Изображение', upload_to='pokemons', blank=True, null=True)
+    image = models.ImageField(
+        'Изображение',
+        upload_to='pokemons',
+        blank=True,
+        null=True
+    )
     description = models.TextField('Описание', blank=True)
     previous_evolution = models.ForeignKey(
         'self',
@@ -27,8 +33,16 @@ class PokemonEntity(models.Model):
     )
     lat = models.FloatField('Широта')
     lon = models.FloatField('Долгота')
-    appeared_at = models.DateTimeField('Время появления', blank=True, null=True)
-    disappeared_at = models.DateTimeField('Время исчезновения', blank=True, null=True)
+    appeared_at = models.DateTimeField(
+        'Время появления',
+        blank=True,
+        null=True
+    )
+    disappeared_at = models.DateTimeField(
+        'Время исчезновения',
+        blank=True,
+        null=True
+    )
 
     level = models.IntegerField('Уровень', blank=True, null=True)
     health = models.IntegerField('Здоровье', blank=True, null=True)
