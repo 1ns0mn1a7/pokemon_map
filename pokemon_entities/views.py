@@ -84,6 +84,11 @@ def show_pokemon(request, pokemon_id):
         'title_jp': pokemon.title_jp,
         'img_url': request.build_absolute_uri(pokemon.image.url) if pokemon.image else '',
         'description': pokemon.description,
+        'previous_evolution': {
+            'pokemon_id': pokemon.previous_evolution.id,
+            'title_ru': pokemon.previous_evolution.title,
+            'img_url': request.build_absolute_uri(pokemon.previous_evolution.image.url),
+        } if pokemon.previous_evolution else None,
     }
 
     return render(request, 'pokemon.html', context={
