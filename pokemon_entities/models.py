@@ -29,7 +29,8 @@ class PokemonEntity(models.Model):
     pokemon = models.ForeignKey(
         'Pokemon',
         verbose_name='Покемон',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='entities'
     )
     lat = models.FloatField('Широта')
     lon = models.FloatField('Долгота')
@@ -44,11 +45,11 @@ class PokemonEntity(models.Model):
         null=True
     )
 
-    level = models.IntegerField('Уровень', blank=True, null=True)
-    health = models.IntegerField('Здоровье', blank=True, null=True)
-    strength = models.IntegerField('Атака', blank=True, null=True)
-    defence = models.IntegerField('Защита', blank=True, null=True)
-    stamina = models.IntegerField('Выносливость', blank=True, null=True)
+    level = models.PositiveSmallIntegerField('Уровень', blank=True, null=True)
+    health = models.PositiveSmallIntegerField('Здоровье', blank=True, null=True)
+    strength = models.PositiveSmallIntegerField('Атака', blank=True, null=True)
+    defence = models.PositiveSmallIntegerField('Защита', blank=True, null=True)
+    stamina = models.PositiveSmallIntegerField('Выносливость', blank=True, null=True)
 
     def __str__(self):
         return f"{self.id}: {self.pokemon.title} ({self.lat}, {self.lon})"

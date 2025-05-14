@@ -1,5 +1,6 @@
 import folium
 
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.utils.timezone import localtime
 from .models import Pokemon, PokemonEntity
@@ -11,6 +12,13 @@ DEFAULT_IMAGE_URL = (
     '/latest/fixed-aspect-ratio-down/width/240/height/240?cb=20130525215832'
     '&fill=transparent'
 )
+
+
+def get_active_entities(qs, current_time):
+    return qs.filter(
+        Q(appeared_at__lte=current_time) | Q(appeared_at__isnull=True),
+        Q(disappeared_at__gte=current_time) | Q(disappeared_at__isnull=True)
+    )
 
 
 def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
@@ -30,11 +38,8 @@ def show_all_pokemons(request):
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     current_time = localtime()
 
-    for entity in PokemonEntity.objects.all():
-        if entity.appeared_at and entity.appeared_at > current_time:
-            continue
-        if entity.disappeared_at and entity.disappeared_at < current_time:
-            continue
+    entities = get_active_entities(PokemonEntity.objects, current_time)
+    for entity in entities:
         if entity.pokemon.image:
             add_pokemon(
                 folium_map,
@@ -62,11 +67,8 @@ def show_pokemon(request, pokemon_id):
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     current_time = localtime()
 
-    for entity in pokemon.pokemonentity_set.all():
-        if entity.appeared_at and entity.appeared_at > current_time:
-            continue
-        if entity.disappeared_at and entity.disappeared_at < current_time:
-            continue
+    entities = get_active_entities(pokemon.entities, current_time)
+    for entity in entities:
         if pokemon.image:
             add_pokemon(
                 folium_map,
